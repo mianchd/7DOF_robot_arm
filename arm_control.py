@@ -2,7 +2,7 @@
 import sys
 import os
 import time
-# import psutil
+import psutil
 
 import numpy as np
 import math
@@ -14,6 +14,12 @@ from PIL import Image
 
 sys.path.append(os.path.join(sys.path[0],'vrep_boilerplate'))
 import vrep
+
+
+"""
+V-REP Installation folder here. The Extracted archive of V-REP installation files
+"""
+vrep_dir = "/home/ubuntu/Downloads/V-REP_PRO_EDU_V3_6_1_Ubuntu18_04/"
 
 blocking = vrep.simx_opmode_blocking
 oneshot = vrep.simx_opmode_oneshot
@@ -28,10 +34,12 @@ def wait(duration=5, str_=''):
 		time.sleep(1)
 	print()
 
-if not 'vrep.exe' in [p.name() for p in psutil.process_iter()]:
+if not 'vrep' in [p.name() for p in psutil.process_iter()]:
 	try:
-		scene_file = os.path.join('"' + sys.path[0],'scenes\\7dof_arm_sim.ttt' + '"')
-		os.system(scene_file)
+		scene_file = os.path.join(sys.path[0], 'scenes/7dof_arm_sim.ttt')
+		command_to_execute = "gnome-terminal -x " + vrep_dir + "vrep.sh " + scene_file
+		print(f"Executing: {command_to_execute}")
+		os.system(command_to_execute)
 		wait(4, 'Launching V-REP.')
 		print('Loading Scene File')
 	except:
@@ -544,8 +552,8 @@ def main():
 	robotEnv.move_to_default_config()
 	# robotEnv.stream_camera_images('EE_camera', 'base_camera')
 
-	# random_agent = agent_Random(robotEnv)
-	# random_agent.move_randomly()
+	#random_agent = agent_Random(robotEnv)
+	#random_agent.move_randomly()
 
 	myagent = agent_RL(robotEnv)
 	myagent.train()
